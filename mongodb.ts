@@ -27,7 +27,3 @@ export default async function connectToDatabase(): Promise<Db> {
   cachedDb = db;
   return cachedDb;
 }
-
-export const COLLECTION_NAMES = {
-  articles: "articles",
-};

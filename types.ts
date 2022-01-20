@@ -3,6 +3,10 @@ export enum SOURCE {
   hashnode = "hashnode",
 }
 
+export enum COLLECTION_NAMES {
+  articles = "articles",
+}
+
 export enum VIEWS_MILESTONE {
   hundred = 100,
   two_hundred = 2 * hundred,
