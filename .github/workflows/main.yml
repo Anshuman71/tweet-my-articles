@@ -5,7 +5,7 @@ name: Heartbeat check every 10 minutes
 # Controls when the workflow will run
 on:
   schedule:
-  - cron: "*/10 * * * *"
+    - cron: "0 3 * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,5 +19,5 @@ jobs:
       - name: Web Request Action
         uses: Satak/webrequest-action@v1.2.3
         with:
-            # Web request URL endpoint
-            url: 'https://tma.theanshuman.dev/api/heartbeat'
+          # Web request URL endpoint
+          url: "https://tma.theanshuman.dev/api/heartbeat"
