@@ -1,16 +1,12 @@
 import { Db } from "mongodb";
-
-const url = require("url");
 const MongoClient = require("mongodb").MongoClient;
 
 // Create cached connection variable
 let cachedDb: Db | null = null;
 
 // A function for connecting to MongoDB,
-// taking a single parameter of the connection string
 export default async function connectToDatabase(): Promise<Db> {
-  // If the database connection is cached,
-  // use it instead of creating a new connection
+  // If the database connection is cached, use it instead of creating a new connection
   if (cachedDb) {
     return cachedDb;
   }
@@ -25,11 +21,11 @@ export default async function connectToDatabase(): Promise<Db> {
   );
 
   // Select the database through the connection,
-  const db = client.db(process.env.DB_NAME);
+  const db: Db = client.db(process.env.DB_NAME);
 
   // Cache the database connection and return the connection
   cachedDb = db;
-  return db;
+  return cachedDb;
 }
 
 export const COLLECTION_NAMES = {
