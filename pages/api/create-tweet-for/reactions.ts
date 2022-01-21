@@ -2,8 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import connectToDatabase from "../../../mongodb";
 import {
   createDevArticle,
-  generateLogString,
+  getLogString,
   getPublishedArticlesFromDEV,
+  getReactionsTweetBody,
+  sendTweet,
 } from "../../../utils";
 import { Document } from "mongodb";
 import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
@@ -13,17 +15,17 @@ export default async function reactions(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  console.info(generateLogString("Running Reactions Function"));
+  console.info(getLogString("Running Reactions Function"));
   try {
     const devArticles = await getPublishedArticlesFromDEV();
-    console.info(generateLogString("Total Articles: " + devArticles.length));
+    console.info(getLogString("Total Articles: " + devArticles.length));
     const database = await connectToDatabase();
     const articlesCollection = database.collection(COLLECTION_NAMES.articles);
     const devArticleFromDB = (await articlesCollection
       .find({ source: SOURCE.dev })
       .toArray()) as unknown as Article[];
     console.info(
-      generateLogString("Total Articles In DB: " + devArticleFromDB.length)
+      getLogString("Total Articles In DB: " + devArticleFromDB.length)
     );
     const newArticles: Document[] = [];
     devArticles.forEach(async (article: DevArticle) => {
@@ -36,29 +38,31 @@ export default async function reactions(
         const milestoneReached = REACTIONS_MILESTONE_SEQUENCE.find(
           (milestone) => article.public_reactions_count > milestone
         );
+        console.info(getLogString("Milestone reached: " + milestoneReached));
         console.info(
-          generateLogString("Milestone reached: " + milestoneReached)
-        );
-        console.info(
-          generateLogString(
-            "Existing Milestone: " + value.lastReactionsMilestone
-          )
+          getLogString("Existing Milestone: " + value.lastReactionsMilestone)
         );
         if (
           milestoneReached &&
           milestoneReached !== value.lastReactionsMilestone
         ) {
-          console.info(generateLogString("Updating database"));
-          await articlesCollection.updateOne(findExpression, {
-            $set: {
-              lastReactionsMilestone: milestoneReached,
-              lastTweetedAt: Date.now(),
-            },
-          });
-          // send tweet
+          console.info(getLogString("Sending Tweet!"));
+          const tweetSent = await sendTweet(getReactionsTweetBody(article));
+          if (tweetSent) {
+            console.info(getLogString("Tweet sent successfully!"));
+            await articlesCollection.updateOne(findExpression, {
+              $set: {
+                lastReactionsMilestone: milestoneReached,
+                lastTweetedAt: Date.now(),
+              },
+            });
+            console.info(getLogString("Data updated!"));
+          } else {
+            console.info(getLogString("Sending tweet failed!"));
+          }
         }
       } else {
-        console.info(generateLogString("New article found: " + article.title));
+        console.info(getLogString("New article found: " + article.title));
         newArticles.push(createDevArticle(article));
       }
     });

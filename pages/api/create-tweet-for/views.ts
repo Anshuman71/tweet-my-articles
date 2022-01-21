@@ -4,25 +4,27 @@ import connectToDatabase from "../../../mongodb";
 import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
 import {
   createDevArticle,
-  generateLogString,
+  getLogString,
   getPublishedArticlesFromDEV,
+  getViewsTweetBody,
+  sendTweet,
 } from "../../../utils";
 
 export default async function views(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  console.info(generateLogString("Running Views Function"));
+  console.info(getLogString("Running Views Function"));
   try {
     const devArticles = await getPublishedArticlesFromDEV();
-    console.info(generateLogString("Total Articles: " + devArticles.length));
+    console.info(getLogString("Total Articles: " + devArticles.length));
     const database = await connectToDatabase();
     const articlesCollection = database.collection(COLLECTION_NAMES.articles);
     const devArticleFromDB = (await articlesCollection
       .find({ source: SOURCE.dev })
       .toArray()) as unknown as Article[];
     console.info(
-      generateLogString("Total Articles In DB: " + devArticleFromDB.length)
+      getLogString("Total Articles In DB: " + devArticleFromDB.length)
     );
 
     devArticles.forEach(async (article: DevArticle) => {
@@ -35,24 +37,28 @@ export default async function views(
         const milestoneReached = VIEWS_MILESTONE_SEQUENCE.find(
           (milestone) => article.page_views_count > milestone
         );
+        console.info(getLogString("Milestone reached: " + milestoneReached));
         console.info(
-          generateLogString("Milestone reached: " + milestoneReached)
-        );
-        console.info(
-          generateLogString("Existing Milestone: " + value.lastViewsMilestone)
+          getLogString("Existing Milestone: " + value.lastViewsMilestone)
         );
         if (milestoneReached && milestoneReached !== value.lastViewsMilestone) {
-          console.info(generateLogString("Updating database"));
-          await articlesCollection.updateOne(findExpression, {
-            $set: {
-              lastViewsMilestone: milestoneReached,
-              lastTweetedAt: Date.now(),
-            },
-          });
-          // send tweet
+          console.info(getLogString("Sending Tweet!"));
+          const tweetSent = await sendTweet(getViewsTweetBody(article));
+          if (tweetSent) {
+            console.info(getLogString("Tweet sent successfully!"));
+            await articlesCollection.updateOne(findExpression, {
+              $set: {
+                lastViewsMilestone: milestoneReached,
+                lastTweetedAt: Date.now(),
+              },
+            });
+            console.info(getLogString("Data updated!"));
+          } else {
+            console.info(getLogString("Sending tweet failed!"));
+          }
         }
       } else {
-        console.info(generateLogString("New article found: " + article.title));
+        console.info(getLogString("New article found: " + article.title));
         await articlesCollection.insertOne(createDevArticle(article));
       }
     });
