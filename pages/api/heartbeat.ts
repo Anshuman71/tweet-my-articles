@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function tweets(
+export default async function heartbeat(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
