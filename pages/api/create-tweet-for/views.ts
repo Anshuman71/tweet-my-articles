@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { VIEWS_MILESTONE_SEQUENCE } from "../../../constants";
 import connectToDatabase from "../../../mongodb";
+import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
 import {
   createDevArticle,
   generateLogString,
   getPublishedArticlesFromDEV,
 } from "../../../utils";
-import { COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
-import { VIEWS_MILESTONE_SEQUENCE } from "../../../constants";
 
 export default async function views(
   request: NextApiRequest,
@@ -18,9 +18,9 @@ export default async function views(
     console.info(generateLogString("Total Articles: " + devArticles.length));
     const database = await connectToDatabase();
     const articlesCollection = database.collection(COLLECTION_NAMES.articles);
-    const devArticleFromDB = await articlesCollection
+    const devArticleFromDB = (await articlesCollection
       .find({ source: SOURCE.dev })
-      .toArray();
+      .toArray()) as unknown as Article[];
     console.info(
       generateLogString("Total Articles In DB: " + devArticleFromDB.length)
     );
@@ -39,13 +39,13 @@ export default async function views(
           generateLogString("Milestone reached: " + milestoneReached)
         );
         console.info(
-          generateLogString("Existing Milestone: " + value.lastViewsMileStone)
+          generateLogString("Existing Milestone: " + value.lastViewsMilestone)
         );
-        if (milestoneReached && milestoneReached !== value.lastViewsMileStone) {
+        if (milestoneReached && milestoneReached !== value.lastViewsMilestone) {
           console.info(generateLogString("Updating database"));
           await articlesCollection.updateOne(findExpression, {
             $set: {
-              lastViewsMileStone: milestoneReached,
+              lastViewsMilestone: milestoneReached,
               lastTweetedAt: Date.now(),
             },
           });
