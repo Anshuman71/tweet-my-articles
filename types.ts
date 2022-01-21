@@ -9,7 +9,7 @@ export enum COLLECTION_NAMES {
 
 export enum VIEWS_MILESTONE {
   hundred = 100,
-  two_hundred = 2 * hundred,
+  two_hundred_fifty = 2.5 * hundred,
   five_hundred = 5 * hundred,
   thousand = 1000,
   two_thousand = 2 * thousand,
@@ -19,7 +19,6 @@ export enum VIEWS_MILESTONE {
 
 export enum REACTIONS_MILESTONE {
   ten = 10,
-  twenty = 20,
   fifty = 50,
   hundred = 100,
   two_hundred = 2 * hundred,
@@ -29,9 +28,11 @@ export enum REACTIONS_MILESTONE {
 export interface Article {
   id: number;
   source: SOURCE;
-  lastViewsMilestone: string;
-  lastReactionsMilestone: string;
-  last_tweeted_at: number;
+  title: string;
+  published_at: number;
+  lastViewsMilestone: number;
+  lastReactionsMilestone: number;
+  lastTweetedAt: number;
 }
 
 export interface DevArticle {
