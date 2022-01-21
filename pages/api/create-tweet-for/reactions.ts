@@ -5,7 +5,8 @@ import {
   generateLogString,
   getPublishedArticlesFromDEV,
 } from "../../../utils";
-import { COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
+import { Document } from "mongodb";
+import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
 import { REACTIONS_MILESTONE_SEQUENCE } from "../../../constants";
 
 export default async function reactions(
@@ -18,12 +19,13 @@ export default async function reactions(
     console.info(generateLogString("Total Articles: " + devArticles.length));
     const database = await connectToDatabase();
     const articlesCollection = database.collection(COLLECTION_NAMES.articles);
-    const devArticleFromDB = await articlesCollection
+    const devArticleFromDB = (await articlesCollection
       .find({ source: SOURCE.dev })
-      .toArray();
+      .toArray()) as unknown as Article[];
     console.info(
       generateLogString("Total Articles In DB: " + devArticleFromDB.length)
     );
+    const newArticles: Document[] = [];
     devArticles.forEach(async (article: DevArticle) => {
       const findExpression = {
         id: article.id,
@@ -38,7 +40,9 @@ export default async function reactions(
           generateLogString("Milestone reached: " + milestoneReached)
         );
         console.info(
-          generateLogString("Existing Milestone: " + value.lastViewsMileStone)
+          generateLogString(
+            "Existing Milestone: " + value.lastReactionsMilestone
+          )
         );
         if (
           milestoneReached &&
@@ -55,9 +59,12 @@ export default async function reactions(
         }
       } else {
         console.info(generateLogString("New article found: " + article.title));
-        await articlesCollection.insertOne(createDevArticle(article));
+        newArticles.push(createDevArticle(article));
       }
     });
+    if (newArticles.length) {
+      await articlesCollection.insertMany(newArticles);
+    }
     response.status(200).send({
       type: "success",
     });
