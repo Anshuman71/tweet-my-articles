@@ -18,6 +18,7 @@ export default async function connectToDatabase(): Promise<Db> {
   console.info(generateLogString("No client found! Creating a new one."));
   // @ts-ignore If no connection is cached, create a new one
   const client = new MongoClient(process.env.ATLAS_URI_PROD as string, opts);
+  await client.connect();
   const db: Db = client.db(process.env.DB_NAME);
   cachedDB = db;
   return cachedDB;
