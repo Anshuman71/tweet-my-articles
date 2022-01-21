@@ -28,7 +28,7 @@ export function createDevArticle(article: DevArticle): Article {
   };
 }
 
-export function generateLogString(val: string) {
+export function getLogString(val: string) {
   const separator = "=".repeat(20);
   const padding = " ".repeat(10);
   return separator + padding + val + padding + separator;
@@ -70,10 +70,33 @@ export async function sendTweet(text: string) {
       // @ts-ignore
       headers: { "content-type": "application/json", ...authHeader },
     });
-
+    console.info(getLogString("Tweet status: " + data.status));
     return data.status === 201;
   } catch (err) {
     console.error(err);
     return false;
   }
+}
+
+function sliceAtFifty(val: string) {
+  if (val.length <= 50) {
+    return val;
+  }
+  return val.slice(0, 47).padEnd(50, ".");
+}
+
+export function getViewsTweetBody(article: DevArticle): string {
+  return `🚀 Yayy! 🚀\nMy article on DEV "${sliceAtFifty(
+    article.title
+  )}" has been viewed more than ${
+    article.page_views_count
+  } times.\nIn case you missed it, please go check it out now! ${article.url}.`;
+}
+
+export function getReactionsTweetBody(article: DevArticle): string {
+  return `🚀 Yayy! 🚀\nMy article on DEV "${sliceAtFifty(
+    article.title
+  )}" has been liked more than ${
+    article.positive_reactions_count
+  } times.\nIn case you missed it, please go check it out now! ${article.url}.`;
 }
