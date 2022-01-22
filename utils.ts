@@ -82,12 +82,32 @@ export async function sendTweet(text: string) {
   }
 }
 
+const MessageStart = `🚀 Yayy! 🚀\nMy article on DEV has been`;
+const hashTags = "#javascript #DEVCommunity";
+const footerText = "\nTweet made by https://tma.theanshuman.dev";
+
+function TagLine(url: string) {
+  return `In case you missed it, please go check it out now! ${url}`;
+}
+
+function createMessage(value: string) {
+  return `${MessageStart} ${value} \n ${hashTags} ${footerText}`;
+}
+
 export function getViewsTweetBody(article: Article & DevArticle): string {
-  return `🚀 Yayy! 🚀\nMy article on DEV has been viewed more than ${article.page_views_count} times. In case you missed it, please go check it out now! ${article.shortUrl}`;
+  return createMessage(
+    `viewed more than ${article.page_views_count} times. ${TagLine(
+      article.shortUrl
+    )}`
+  );
 }
 
 export function getReactionsTweetBody(article: Article & DevArticle): string {
-  return `🚀 Yayy! 🚀\nMy article on DEV has been liked more than ${article.positive_reactions_count} times. In case you missed it, please go check it out now! ${article.shortUrl}`;
+  return createMessage(
+    `liked more than ${article.public_reactions_count} times. ${TagLine(
+      article.shortUrl
+    )}`
+  );
 }
 
 export async function getShortUrl(article: DevArticle) {
