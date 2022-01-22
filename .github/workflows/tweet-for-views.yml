@@ -4,8 +4,8 @@ name: Send Views Tweets
 
 # Controls when the workflow will run
 on:
-  schedule:
-    - cron: "*/5 * * * *" # "0 17 * * 1-4"
+  schedule: # “At 17:00 on every day-of-week from Monday through Thursday.”
+    - cron: "0 17 * * 1-4" # "*/5 * * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
