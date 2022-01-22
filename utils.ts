@@ -6,6 +6,8 @@ const CONSUMER_KEY = process.env.CONSUMER_KEY as string;
 const CONSUMER_KEY_SECRET = process.env.CONSUMER_KEY_SECRET as string;
 const ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN as string;
 const ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET as string;
+const SHORTNER_API_KEY = process.env.SHORTNER_API_KEY;
+const SHORTNER_DOMAIN = process.env.SHORTNER_DOMAIN;
 
 export async function getPublishedArticlesFromDEV() {
   const res = await fetch(`${process.env.DEV_API_URL}/articles/me/published`, {
@@ -17,7 +19,7 @@ export async function getPublishedArticlesFromDEV() {
 }
 
 export async function createDevArticle(article: DevArticle): Promise<Article> {
-  const shortUrl = await getShortUrl(article.url);
+  const shortUrl = await getShortUrl(article);
   return {
     id: article.id,
     source: SOURCE.dev,
@@ -88,17 +90,18 @@ export function getReactionsTweetBody(article: Article & DevArticle): string {
   return `🚀 Yayy! 🚀\nMy article on DEV has been liked more than ${article.positive_reactions_count} times. In case you missed it, please go check it out now! ${article.shortUrl}`;
 }
 
-export async function getShortUrl(link: string) {
+export async function getShortUrl(article: DevArticle) {
   const options = {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      apikey: process.env.SHORTNER_API_KEY,
+      apikey: SHORTNER_API_KEY,
     },
     body: JSON.stringify({
-      domain: { fullName: process.env.SHORTNER_DOMAIN },
-      destination: link,
+      domain: { fullName: SHORTNER_DOMAIN },
+      destination: article.url,
+      title: article.title,
     }),
   };
   // @ts-ignore
@@ -107,4 +110,20 @@ export async function getShortUrl(link: string) {
   return data.shortUrl.startsWith("http")
     ? data.shortUrl
     : `https://${data.shortUrl}`;
+}
+
+export async function deleteLinks() {
+  const allLinksRes = await fetch("https://api.rebrandly.com/v1/links", {
+    // @ts-ignore
+    headers: { apiKey: SHORTNER_API_KEY },
+  });
+  const data = await allLinksRes.json();
+  console.log("🚀 ~ file: utils.ts ~ line 121 ~ deleteLinks ~ data", data);
+  for (let i = 0; i < data.length; i++) {
+    await fetch("https://api.rebrandly.com/v1/links/" + data[i].id, {
+      method: "DELETE",
+      // @ts-ignore
+      headers: { apiKey: SHORTNER_API_KEY },
+    });
+  }
 }
