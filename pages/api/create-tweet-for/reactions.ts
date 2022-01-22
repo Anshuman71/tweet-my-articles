@@ -26,7 +26,7 @@ export default async function reactions(
       .toArray()) as unknown as Article[];
     console.info(formatLog("Total Articles In DB: " + devArticleFromDB.length));
     const newArticles: Document[] = [];
-    const actions = devArticles.forEach(async (article: DevArticle) => {
+    const actions = devArticles.map(async (article: DevArticle) => {
       const findExpression = {
         id: article.id,
         source: SOURCE.dev,
@@ -78,6 +78,7 @@ export default async function reactions(
       type: "success",
     });
   } catch (e: any) {
+    console.log("🚀 ~ file: reactions.ts ~ line 81 ~ e", e);
     response.status(500).send({
       type: "error",
       message: e.message,
