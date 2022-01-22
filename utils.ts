@@ -16,10 +16,12 @@ export async function getPublishedArticlesFromDEV() {
   return res.json();
 }
 
-export function createDevArticle(article: DevArticle): Article {
+export async function createDevArticle(article: DevArticle): Promise<Article> {
+  const shortUrl = await getShortUrl(article.url);
   return {
     id: article.id,
     source: SOURCE.dev,
+    shortUrl,
     title: article.title,
     published_at: new Date(article.published_timestamp).getTime(),
     lastViewsMilestone: 0,
@@ -28,7 +30,7 @@ export function createDevArticle(article: DevArticle): Article {
   };
 }
 
-export function getLogString(val: string) {
+export function formatLog(val: string) {
   const separator = "=".repeat(20);
   const padding = " ".repeat(10);
   return separator + padding + val + padding + separator;
@@ -70,7 +72,7 @@ export async function sendTweet(text: string) {
       // @ts-ignore
       headers: { "content-type": "application/json", ...authHeader },
     });
-    console.info(getLogString("Tweet status: " + data.status));
+    console.info(formatLog("Tweet status: " + data.status));
     return data.status === 201;
   } catch (err) {
     console.error(err);
@@ -78,25 +80,31 @@ export async function sendTweet(text: string) {
   }
 }
 
-function sliceAtFifty(val: string) {
-  if (val.length <= 50) {
-    return val;
-  }
-  return val.slice(0, 47).padEnd(50, ".");
+export function getViewsTweetBody(article: Article & DevArticle): string {
+  return `🚀 Yayy! 🚀\nMy article on DEV has been viewed more than ${article.page_views_count} times. In case you missed it, please go check it out now! ${article.shortUrl}`;
 }
 
-export function getViewsTweetBody(article: DevArticle): string {
-  return `🚀 Yayy! 🚀\nMy article on DEV "${sliceAtFifty(
-    article.title
-  )}" has been viewed more than ${
-    article.page_views_count
-  } times.\nIn case you missed it, please go check it out now! ${article.url}.`;
+export function getReactionsTweetBody(article: Article & DevArticle): string {
+  return `🚀 Yayy! 🚀\nMy article on DEV has been liked more than ${article.positive_reactions_count} times. In case you missed it, please go check it out now! ${article.shortUrl}`;
 }
 
-export function getReactionsTweetBody(article: DevArticle): string {
-  return `🚀 Yayy! 🚀\nMy article on DEV "${sliceAtFifty(
-    article.title
-  )}" has been liked more than ${
-    article.positive_reactions_count
-  } times.\nIn case you missed it, please go check it out now! ${article.url}.`;
+export async function getShortUrl(link: string) {
+  const options = {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      apikey: process.env.SHORTNER_API_KEY,
+    },
+    body: JSON.stringify({
+      domain: { fullName: process.env.SHORTNER_DOMAIN },
+      destination: link,
+    }),
+  };
+  // @ts-ignore
+  const res = await fetch("https://api.rebrandly.com/v1/links", options);
+  const data = await res.json();
+  return data.shortUrl.startsWith("http")
+    ? data.shortUrl
+    : `https://${data.shortUrl}`;
 }

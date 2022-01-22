@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export enum SOURCE {
   dev = "DEV",
   hashnode = "hashnode",
@@ -29,6 +31,7 @@ export interface Article {
   id: number;
   source: SOURCE;
   title: string;
+  shortUrl: string;
   published_at: number;
   lastViewsMilestone: number;
   lastReactionsMilestone: number;
