@@ -45,7 +45,9 @@ export default async function reactions(
           milestoneReached !== value.lastReactionsMilestone
         ) {
           console.info(formatLog("Sending Tweet!"));
-          const tweetSent = await sendTweet(getReactionsTweetBody(article));
+          const tweetSent = await sendTweet(
+            getReactionsTweetBody({ ...article, ...value })
+          );
           if (tweetSent) {
             console.info(formatLog("Tweet sent successfully!"));
             await articlesCollection.updateOne(findExpression, {
