@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import { getLogString } from "./utils";
+import { formatLog } from "./utils";
 
 // Create cached connection variable
 let cachedDB: Db | null = null;
@@ -8,14 +8,14 @@ let cachedDB: Db | null = null;
 export default async function connectToDatabase(): Promise<Db> {
   // If the database connection is cached, use it instead of creating a new connection
   if (cachedDB) {
-    console.info(getLogString("Using cached client!"));
+    console.info(formatLog("Using cached client!"));
     return cachedDB;
   }
   const opts = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   };
-  console.info(getLogString("No client found! Creating a new one."));
+  console.info(formatLog("No client found! Creating a new one."));
   // @ts-ignore If no connection is cached, create a new one
   const client = new MongoClient(process.env.ATLAS_URI_PROD as string, opts);
   await client.connect();
