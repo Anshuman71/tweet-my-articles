@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { Document } from "mongodb";
+
 import { VIEWS_MILESTONE_SEQUENCE } from "../../../constants";
 import connectToDatabase from "../../../mongodb";
 import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
 import {
   createDevArticle,
-  getLogString,
+  formatLog,
   getPublishedArticlesFromDEV,
   getViewsTweetBody,
   sendTweet,
@@ -14,20 +16,19 @@ export default async function views(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  console.info(getLogString("Running Views Function"));
+  console.info(formatLog("Running Views Function"));
   try {
     const devArticles = await getPublishedArticlesFromDEV();
-    console.info(getLogString("Total Articles: " + devArticles.length));
+    console.info(formatLog("Total Articles: " + devArticles.length));
     const database = await connectToDatabase();
     const articlesCollection = database.collection(COLLECTION_NAMES.articles);
     const devArticleFromDB = (await articlesCollection
       .find({ source: SOURCE.dev })
       .toArray()) as unknown as Article[];
-    console.info(
-      getLogString("Total Articles In DB: " + devArticleFromDB.length)
-    );
+    console.info(formatLog("Total Articles In DB: " + devArticleFromDB.length));
+    const newArticles: any[] = [];
 
-    devArticles.forEach(async (article: DevArticle) => {
+    const actions = devArticles.map(async (article: DevArticle) => {
       const findExpression = {
         id: article.id,
         source: SOURCE.dev,
@@ -37,31 +38,41 @@ export default async function views(
         const milestoneReached = VIEWS_MILESTONE_SEQUENCE.find(
           (milestone) => article.page_views_count > milestone
         );
-        console.info(getLogString("Milestone reached: " + milestoneReached));
+        console.info(formatLog("Milestone reached: " + milestoneReached));
         console.info(
-          getLogString("Existing Milestone: " + value.lastViewsMilestone)
+          formatLog("Existing Milestone: " + value.lastViewsMilestone)
         );
         if (milestoneReached && milestoneReached !== value.lastViewsMilestone) {
-          console.info(getLogString("Sending Tweet!"));
-          const tweetSent = await sendTweet(getViewsTweetBody(article));
+          console.info(formatLog("Sending Tweet!"));
+          const tweetSent = await sendTweet(
+            getViewsTweetBody({ ...article, ...value })
+          );
           if (tweetSent) {
-            console.info(getLogString("Tweet sent successfully!"));
+            console.info(formatLog("Tweet sent successfully!"));
             await articlesCollection.updateOne(findExpression, {
               $set: {
                 lastViewsMilestone: milestoneReached,
                 lastTweetedAt: Date.now(),
               },
             });
-            console.info(getLogString("Data updated!"));
+            console.info(formatLog("Data updated!"));
           } else {
-            console.info(getLogString("Sending tweet failed!"));
+            console.info(formatLog("Sending tweet failed!"));
           }
         }
       } else {
-        console.info(getLogString("New article found: " + article.title));
-        await articlesCollection.insertOne(createDevArticle(article));
+        console.info(formatLog("New article found: " + article.title));
+        const newDoc = await createDevArticle(article);
+        newArticles.push(newDoc);
       }
     });
+    const settledActions = await Promise.allSettled(actions);
+    console.log(formatLog("Settled Actions "), settledActions);
+
+    if (newArticles.length) {
+      const insertResult = await articlesCollection.insertMany(newArticles);
+      console.log(formatLog("Insert result "), insertResult);
+    }
     response.status(200).send({
       type: "success",
     });
