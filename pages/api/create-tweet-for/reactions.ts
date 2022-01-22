@@ -71,11 +71,8 @@ export default async function reactions(
     console.log(formatLog("Settled Actions "), settledActions);
 
     if (newArticles.length) {
-      await articlesCollection.insertMany(newArticles);
-      if (newArticles.length) {
-        const insertResult = await articlesCollection.insertMany(newArticles);
-        console.log(formatLog("Insert result "), insertResult);
-      }
+      const insertResult = await articlesCollection.insertMany(newArticles);
+      console.log(formatLog("Insert result "), insertResult);
     }
     response.status(200).send({
       type: "success",
