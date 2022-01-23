@@ -19,10 +19,12 @@ const Home: NextPage = () => {
           href="/icon-96x96.png"
         />
       </Head>
+      <p>This project automatically retweets my popular articles.</p>
       <p>
         This is only a REST API. Available on{" "}
         <a href="https://github.com/Anshuman71/tweet-my-articles">Github</a>
       </p>
+      <p>You can also fork it and use for your own DEV account.</p>
       <p>This project is a clone-and-host-on-your-own (i made that up, lol)</p>
       <p>How to setup on your own?</p>
       <ul>
