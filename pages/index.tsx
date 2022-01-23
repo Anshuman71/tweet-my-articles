@@ -33,6 +33,9 @@ const Home: NextPage = () => {
         <li>Deploy it on Vercel.</li>
         <li>Write awesome articles and wait.</li>
       </ul>
+      <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAnshuman71%2Ftweet-my-articles&project-name=tweet-my-articles">
+        <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+      </a>
     </div>
   );
 };

@@ -10,6 +10,12 @@ At start it was good but, then one day Daily.dev tagged me in a [tweet](https://
 
 ---
 
+## One click deploy using Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAnshuman71%2Ftweet-my-articles&project-name=tweet-my-articles)
+
+---
+
 ## How do I use this project?
 
 ### Step 1
