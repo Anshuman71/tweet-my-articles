@@ -12,18 +12,7 @@ const Home: NextPage = () => {
           name="description"
           content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="96x96"
-          href="/icon-96x96.png"
-        />
-        <meta name="title" content="Tweet My articles" />
-        <meta
-          name="description"
-          content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
-        />
-
+        <meta name="keywords" content="tweet my articles" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tma.theanshuman.dev/" />
         <meta property="og:title" content="Tweet My articles" />
@@ -44,8 +33,14 @@ const Home: NextPage = () => {
           content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
         />
         <meta
-          property="twitter:image"
+          property="twitter:image:src"
           content="https://tma.theanshuman.dev/tma.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href="/icon-96x96.png"
         />
       </Head>
       <p>This project automatically retweets my popular articles.</p>
