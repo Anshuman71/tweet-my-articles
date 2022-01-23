@@ -26,10 +26,10 @@ const Home: NextPage = () => {
       <p>This project is a clone-and-host-on-your-own (i made that up, lol)</p>
       <p>How to setup on your own?</p>
       <ul>
-        <li>Clone the repo</li>
-        <li>Deploy it on Vercel</li>
+        <li>Clone the repo.</li>
         <li>Add your credentials to environment variables on Vercel.</li>
-        <li>Chill out</li>
+        <li>Deploy it on Vercel.</li>
+        <li>Write awesome articles and wait.</li>
       </ul>
     </div>
   );
