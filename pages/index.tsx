@@ -10,13 +10,42 @@ const Home: NextPage = () => {
         <title>Tweet My articles</title>
         <meta
           name="description"
-          content="A project to tweet your popular articles from DEV. Built by Anshuman"
+          content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
         />
         <link
           rel="icon"
           type="image/png"
           sizes="96x96"
           href="/icon-96x96.png"
+        />
+        <meta name="title" content="Tweet My articles" />
+        <meta
+          name="description"
+          content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tma.theanshuman.dev/" />
+        <meta property="og:title" content="Tweet My articles" />
+        <meta
+          property="og:description"
+          content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
+        />
+        <meta
+          property="og:image"
+          content="https://tma.theanshuman.dev/tma.png"
+        />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://tma.theanshuman.dev/" />
+        <meta property="twitter:title" content="Tweet My articles" />
+        <meta
+          property="twitter:description"
+          content="A project to automatically tweet your popular articles from DEV. Built by Anshuman."
+        />
+        <meta
+          property="twitter:image"
+          content="https://tma.theanshuman.dev/tma.png"
         />
       </Head>
       <p>This project automatically retweets my popular articles.</p>
