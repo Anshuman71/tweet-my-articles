@@ -6,14 +6,7 @@ This is an open source tool made to automatically tweet famous DEV posts to auth
 
 I am a technical blogger on DEV. My posts have been getting a lot of traction on the platform, and to me its a news worth sharing with the world. So I started tweeting milestones like 1000 views and all.
 
-At start it was good but, then one day Daily.dev tagged me in a tweet
-
-<iframe
-  src="https://twitter.com/sun_anshuman/status/1483503834291126272"
-  style="width:100%; height:300px;"
-></iframe>
-
-And it got me thinking that "if they can automate it, so can I". And that's how my friends, I started bootstrapping this project.
+At start it was good but, then one day Daily.dev tagged me in a [tweet](https://twitter.com/sun_anshuman/status/1483503834291126272) saying "My post got 250 views on their platform".And it got me thinking that "if they can automate it, so can I". And that's how my friends, I started bootstrapping this project.
 
 ---
 
@@ -37,7 +30,7 @@ Create an account on
 
 Get and setup the following credentials from each platform
 
-##### DEV
+#### DEV
 
 ```
 DEV_USERNAME=<xxxxxxxxxxxxxxxxxx>
@@ -49,11 +42,11 @@ You can get the `API_KEY` from Settings > Account > DEV Community API Keys
 
 > This needs to be specified in Vercel Environment variables
 
-##### Vercel
+#### Vercel
 
 Sign up using your GitHub to allow Continuous Deployment.
 
-##### Twitter
+#### Twitter
 
 Sign up for Twitter developer program.
 
@@ -74,7 +67,7 @@ TWITTER_ACCESS_TOKEN_SECRET=<xxxxxxxxxxxxxxxxxx>
 
 > This needs to be specified in Vercel Environment variables
 
-##### Atlas
+#### Atlas
 
 Sign up on Atlas, create a new cluster, click on Connect > Connect using Application
 
