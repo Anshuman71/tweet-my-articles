@@ -6,7 +6,12 @@ This is an open source tool made to automatically tweet famous DEV posts to auth
 
 I am a technical blogger on DEV. My posts have been getting a lot of traction on the platform, and to me its a news worth sharing with the world. So I started tweeting milestones like 1000 views and all.
 
-At start it was good but, then one day Daily.dev tagged me in a tweet <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Definitely showing this to my parents <a href="https://t.co/PH4YMDuvvk">https://t.co/PH4YMDuvvk</a></p>&mdash; Anshuman Bhardwaj (@sun_anshuman) <a href="https://twitter.com/sun_anshuman/status/1483503834291126272?ref_src=twsrc%5Etfw">January 18, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+At start it was good but, then one day Daily.dev tagged me in a tweet
+
+<iframe
+  src="https://twitter.com/sun_anshuman/status/1483503834291126272"
+  style="width:100%; height:300px;"
+></iframe>
 
 And it got me thinking that "if they can automate it, so can I". And that's how my friends, I started bootstrapping this project.
 
