@@ -1,4 +1,4 @@
-import { NextRequest, NextFetchEvent, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const apiKey = request.headers.get("api-key");

@@ -4,22 +4,21 @@ name: Send Views Tweets
 
 # Controls when the workflow will run
 on:
-  schedule: # “At 17:00 on every day-of-week from Monday through Thursday.”
-    - cron: "0 17 * * 1-4" # "*/5 * * * *"
-
+ schedule: # “At 17:00 on every day-of-week from Monday through Thursday.”
+   - cron: "0 17 * * 1-4"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    environment: production
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Run article views job
+      - name: Run article reactions job
         uses: Satak/webrequest-action@v1.2.3
         with:
           # Web request URL endpoint
           url: "https://tma.theanshuman.dev/api/create-tweet-for/views"
           method: POST
-          headers: '{"api-key": "${{ env.API_KEY }}"}'
+          headers: '{"api-key": "${{ secrets.API_KEY }}"}'
