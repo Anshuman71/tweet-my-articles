@@ -6,8 +6,15 @@ const CONSUMER_KEY = process.env.CONSUMER_KEY as string;
 const CONSUMER_KEY_SECRET = process.env.CONSUMER_KEY_SECRET as string;
 const ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN as string;
 const ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET as string;
+
 const SHORTNER_API_KEY = process.env.SHORTNER_API_KEY;
 const SHORTNER_DOMAIN = process.env.SHORTNER_DOMAIN;
+
+const MEDIUM_USERNAME = process.env.MEDIUM_USERNAME;
+const MEDIUM_USER_ID = process.env.MEDIUM_USER_ID as string;
+
+const YT_CHANNEL_ID = process.env.YT_CHANNEL_ID as string;
+const YT_API_KEY = process.env.YT_API_KEY as string;
 
 export async function getPublishedArticlesFromDEV() {
   const res = await fetch(`${process.env.DEV_API_URL}/articles/me/published`, {
@@ -16,6 +23,29 @@ export async function getPublishedArticlesFromDEV() {
     },
   });
   return res.json();
+}
+
+export async function getMediumFollowers() {
+  const res = await fetch("https://medium.com/@anshuman-bhardwaj?format=json", {
+    headers: {
+      "user-agent": "insomnia/2021.7.2",
+    },
+  });
+  const hijackString = "])}while(1);</x>";
+  const jsonText = await res.text();
+  const data = JSON.parse(jsonText.replace(hijackString, ""));
+  return (
+    data?.payload?.references?.SocialStats?.[MEDIUM_USER_ID]
+      ?.usersFollowedByCount || 20
+  );
+}
+
+export async function getYoutubeSubscribers() {
+  const res = await fetch(
+    `https://youtube.googleapis.com/youtube/v3/channels?part=statistics&id=${YT_CHANNEL_ID}&key=${YT_API_KEY}`
+  );
+  const data = await res.json();
+  return data?.items[0]?.statistics?.subscriberCount || 330;
 }
 
 // fetch all followers
