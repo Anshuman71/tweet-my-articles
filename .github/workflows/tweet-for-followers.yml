@@ -1,12 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Send Reactions Tweets
+name: Send Views Tweets
 
 # Controls when the workflow will run
 on:
-  schedule: # “Mon-Thu at 7pm UTC”
-    - cron: "0 19 * * 1-4" # "*/5 * * * *"
-
+  schedule: # “At 18:00 on every Wed”
+    - cron: "0 18 * * 3"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -20,6 +19,6 @@ jobs:
         uses: Satak/webrequest-action@v1.2.3
         with:
           # Web request URL endpoint
-          url: "https://tma.theanshuman.dev/api/create-tweet-for/reactions"
+          url: "https://tma.theanshuman.dev/api/create-tweet-for/followers"
           method: POST
           headers: '{"api-key": "${{ secrets.API_KEY }}"}'
