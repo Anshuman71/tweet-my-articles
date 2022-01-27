@@ -15,6 +15,14 @@ const MEDIUM_USER_ID = process.env.MEDIUM_USER_ID as string;
 
 const YT_CHANNEL_ID = process.env.YT_CHANNEL_ID as string;
 const YT_API_KEY = process.env.YT_API_KEY as string;
+import { TwitterClient } from "twitter-api-client";
+
+export const twitterClient = new TwitterClient({
+  apiKey: CONSUMER_KEY,
+  apiSecret: CONSUMER_KEY_SECRET,
+  accessToken: ACCESS_TOKEN,
+  accessTokenSecret: ACCESS_TOKEN_SECRET,
+});
 
 export async function getPublishedArticlesFromDEV() {
   const res = await fetch(`${process.env.DEV_API_URL}/articles/me/published`, {
