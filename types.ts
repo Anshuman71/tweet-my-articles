@@ -7,6 +7,7 @@ export enum SOURCE {
 
 export enum COLLECTION_NAMES {
   articles = "articles",
+  followers = "followers",
 }
 
 export enum VIEWS_MILESTONE {

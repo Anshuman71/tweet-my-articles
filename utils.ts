@@ -18,6 +18,31 @@ export async function getPublishedArticlesFromDEV() {
   return res.json();
 }
 
+// fetch all followers
+export async function getFollowersFromDev(): Promise<string[]> {
+  let page = 1,
+    limit = 1000;
+  const followers = [];
+  while (page) {
+    const res = await fetch(
+      `${process.env.DEV_API_URL}/followers/users?per_page=${limit}&page=${page}`,
+      {
+        headers: {
+          "api-key": process.env.DEV_API_KEY as string,
+        },
+      }
+    );
+    const answer = await res.json();
+    if (answer && Array.isArray(answer) && answer.length) {
+      followers.push(...answer);
+      page = answer.length === limit ? page + 1 : 0;
+    } else {
+      page = 0;
+    }
+  }
+  return followers;
+}
+
 export async function createDevArticle(article: DevArticle): Promise<Article> {
   const shortUrl = await getShortUrl(article);
   return {
@@ -82,16 +107,16 @@ export async function sendTweet(text: string) {
   }
 }
 
-const MessageStart = `🚀 Yayy! 🚀\nMy article on DEV has been`;
+const MessageStart = `💛 Yayy! 💛\nMy article on DEV has been`;
 const hashTags = "#javascript #DEVCommunity";
-const footerText = "\nTweet made by https://tma.theanshuman.dev";
+const footerText = "\n Thanks, please follow me for more such posts!";
 
 function TagLine(url: string) {
-  return `In case you missed it, please go check it out now! ${url}`;
+  return `In case you missed it, please check it out now! ${url}`;
 }
 
 function createMessage(value: string) {
-  return `${MessageStart} ${value} \n ${hashTags} ${footerText}`;
+  return `${MessageStart} ${value} \n ${footerText} ${hashTags}`;
 }
 
 export function getViewsTweetBody(article: Article & DevArticle): string {
@@ -100,6 +125,10 @@ export function getViewsTweetBody(article: Article & DevArticle): string {
       article.shortUrl
     )}`
   );
+}
+
+export function getFollowersTweetBody(value: number): string {
+  return `💛 Yayy!! 💛 I've reached ${value} followers on DEV. Thanks for all the love and support. Please check out my DEV profile https://dev.to/anshuman_bhardwaj \n ${footerText} ${hashTags}`;
 }
 
 export function getReactionsTweetBody(article: Article & DevArticle): string {
