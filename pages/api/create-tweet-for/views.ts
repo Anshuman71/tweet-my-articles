@@ -27,8 +27,10 @@ export default async function views(
       .toArray()) as unknown as Article[];
     console.info(formatLog("Total Articles In DB: " + devArticleFromDB.length));
     const newArticles: any[] = [];
+    let oneTweetSent = false;
 
-    const actions = devArticles.map(async (article: DevArticle) => {
+    for (let index = 0; index < devArticles.length; index++) {
+      const article = devArticles[index];
       const findExpression = {
         id: article.id,
         source: SOURCE.dev,
@@ -42,12 +44,17 @@ export default async function views(
         console.info(
           formatLog("Existing Milestone: " + value.lastViewsMilestone)
         );
-        if (milestoneReached && milestoneReached !== value.lastViewsMilestone) {
+        if (
+          !oneTweetSent &&
+          milestoneReached &&
+          milestoneReached !== value.lastViewsMilestone
+        ) {
           console.info(formatLog("Sending Tweet!"));
           const tweetSent = await sendTweet(
             getViewsTweetBody({ ...article, ...value })
           );
           if (tweetSent) {
+            oneTweetSent = true;
             console.info(formatLog("Tweet sent successfully!"));
             await articlesCollection.updateOne(findExpression, {
               $set: {
@@ -65,10 +72,7 @@ export default async function views(
         const newDoc = await createDevArticle(article);
         newArticles.push(newDoc);
       }
-    });
-    const settledActions = await Promise.allSettled(actions);
-    console.log(formatLog("Settled Actions "), settledActions);
-
+    }
     if (newArticles.length) {
       const insertResult = await articlesCollection.insertMany(newArticles);
       console.log(formatLog("Insert result "), insertResult);

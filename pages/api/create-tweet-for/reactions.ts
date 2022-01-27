@@ -26,12 +26,16 @@ export default async function reactions(
       .toArray()) as unknown as Article[];
     console.info(formatLog("Total Articles In DB: " + devArticleFromDB.length));
     const newArticles: Document[] = [];
-    const actions = devArticles.map(async (article: DevArticle) => {
+    let oneTweetSent = false;
+
+    for (let index = 0; index < devArticles.length; index++) {
+      const article = devArticles[index];
       const findExpression = {
         id: article.id,
         source: SOURCE.dev,
       };
       const value = devArticleFromDB.find((item) => item.id === article.id);
+
       if (value) {
         const milestoneReached = REACTIONS_MILESTONE_SEQUENCE.find(
           (milestone) => article.public_reactions_count > milestone
@@ -41,6 +45,7 @@ export default async function reactions(
           formatLog("Existing Milestone: " + value.lastReactionsMilestone)
         );
         if (
+          !oneTweetSent &&
           milestoneReached &&
           milestoneReached !== value.lastReactionsMilestone
         ) {
@@ -49,6 +54,7 @@ export default async function reactions(
             getReactionsTweetBody({ ...article, ...value })
           );
           if (tweetSent) {
+            oneTweetSent = true;
             console.info(formatLog("Tweet sent successfully!"));
             await articlesCollection.updateOne(findExpression, {
               $set: {
@@ -66,10 +72,7 @@ export default async function reactions(
         const newDoc = await createDevArticle(article);
         newArticles.push(newDoc);
       }
-    });
-    const settledActions = await Promise.allSettled(actions);
-    console.log(formatLog("Settled Actions "), settledActions);
-
+    }
     if (newArticles.length) {
       const insertResult = await articlesCollection.insertMany(newArticles);
       console.log(formatLog("Insert result "), insertResult);
@@ -78,7 +81,6 @@ export default async function reactions(
       type: "success",
     });
   } catch (e: any) {
-    console.log("🚀 ~ file: reactions.ts ~ line 81 ~ e", e);
     response.status(500).send({
       type: "error",
       message: e.message,
