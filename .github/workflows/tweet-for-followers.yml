@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Send Views Tweets
+name: Send Followers Tweets
 
 # Controls when the workflow will run
 on:
@@ -15,7 +15,7 @@ jobs:
     environment: production
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Run article reactions job
+      - name: Run DEV followers job
         uses: Satak/webrequest-action@v1.2.3
         with:
           # Web request URL endpoint

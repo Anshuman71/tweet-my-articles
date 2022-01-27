@@ -4,8 +4,8 @@ name: Send Views Tweets
 
 # Controls when the workflow will run
 on:
- schedule: # “At 17:00 on every day-of-week from Monday through Thursday.”
-   - cron: "0 17 * * 1-4"
+  schedule: # “At 17:00 on every day-of-week from Monday through Thursday.”
+    - cron: "0 17 * * 1-4"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -15,7 +15,7 @@ jobs:
     environment: production
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Run article reactions job
+      - name: Run article views job
         uses: Satak/webrequest-action@v1.2.3
         with:
           # Web request URL endpoint
