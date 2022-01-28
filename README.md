@@ -2,6 +2,11 @@
 
 This is an open source tool made to automatically tweet famous DEV posts to author's twitter account.
 
+[![Update Twitter banner](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/update-twitter-banner.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/update-twitter-banner.yml)
+[![Send Articles Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-views.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-views.yml)
+[![Send Followers Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-followers.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-followers.yml)
+[![Send Reactions Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-reactions.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-reactions.yml)
+
 ## Motivation
 
 I am a technical blogger on DEV. My posts have been getting a lot of traction on the platform, and to me its a news worth sharing with the world. So I started tweeting milestones like 1000 views and all.
