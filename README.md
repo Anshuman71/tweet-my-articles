@@ -3,7 +3,7 @@
 This is an open source tool made to automatically tweet famous DEV posts to author's twitter account.
 
 [![Update Twitter banner](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/update-twitter-banner.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/update-twitter-banner.yml)
-[![Send Articles Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-articles.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-articles.yml)
+[![Send Articles Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-views.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-views.yml)
 [![Send Followers Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-followers.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-followers.yml)
 [![Send Reactions Tweet](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-reactions.yml/badge.svg?branch=main)](https://github.com/Anshuman71/tweet-my-articles/actions/workflows/tweet-for-reactions.yml)
 
