@@ -36,11 +36,13 @@ export async function getPublishedArticlesFromDEV() {
 export async function getMediumFollowers() {
   const res = await fetch("https://medium.com/@anshuman-bhardwaj?format=json", {
     headers: {
-      "user-agent": "insomnia/2021.7.2",
+      "user-agent": "insomnia/2021.7.2", // didn't work without this for me
     },
   });
+  // Medium adds this to the JSON text
   const hijackString = "])}while(1);</x>";
   const jsonText = await res.text();
+  // remove the hijackString from JSON before parsing
   const data = JSON.parse(jsonText.replace(hijackString, ""));
   return (
     data?.payload?.references?.SocialStats?.[MEDIUM_USER_ID]
@@ -58,9 +60,11 @@ export async function getYoutubeSubscribers() {
 
 // fetch all followers
 export async function getFollowersFromDev(): Promise<string[]> {
+  // start with page 1
   let page = 1,
     limit = 1000;
   const followers = [];
+  // repeat until page number exists
   while (page) {
     const res = await fetch(
       `${process.env.DEV_API_URL}/followers/users?per_page=${limit}&page=${page}`,
@@ -73,8 +77,10 @@ export async function getFollowersFromDev(): Promise<string[]> {
     const answer = await res.json();
     if (answer && Array.isArray(answer) && answer.length) {
       followers.push(...answer);
+      // increment page number if this page is full, otherwise set to 0
       page = answer.length === limit ? page + 1 : 0;
     } else {
+      // no more followers, so set page to 0
       page = 0;
     }
   }
