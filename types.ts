@@ -21,7 +21,6 @@ export enum VIEWS_MILESTONE {
 }
 
 export enum REACTIONS_MILESTONE {
-  ten = 10,
   fifty = 50,
   hundred = 100,
   two_hundred = 2 * hundred,
