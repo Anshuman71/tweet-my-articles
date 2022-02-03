@@ -9,7 +9,12 @@ import {
 } from "../../../utils";
 import { COLLECTION_NAMES } from "../../../types";
 import connectToDatabase from "../../../mongodb";
-import { startOfDay, isLastDayOfMonth, subMonths } from "date-fns";
+import {
+  startOfDay,
+  isLastDayOfMonth,
+  subMonths,
+  lastDayOfMonth,
+} from "date-fns";
 
 export default async function endOfMonthStats(
   request: NextApiRequest,
@@ -24,7 +29,7 @@ export default async function endOfMonthStats(
     const eomStatsCollection = database.collection(COLLECTION_NAMES.eomStats);
     const today = startOfDay(new Date());
     if (isLastDayOfMonth(today)) {
-      const prevMonth = startOfDay(subMonths(today, 1));
+      const prevMonth = startOfDay(lastDayOfMonth(subMonths(today, 1)));
       const twitterFollowers =
         await twitterClient.accountsAndUsers.followersIds({
           count: 5000,
