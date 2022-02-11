@@ -11,6 +11,7 @@ import {
   getViewsTweetBody,
   sendTweet,
 } from "../../../utils";
+import {isWithinInterval, subDays} from "date-fns";
 
 export default async function views(
   request: NextApiRequest,
@@ -44,10 +45,16 @@ export default async function views(
         console.info(
           formatLog("Existing Milestone: " + value.lastViewsMilestone)
         );
+        const today = new Date()
+        const tweetedRecently = isWithinInterval(new Date(value.lastTweetedAt), {
+          start: subDays(today, 3),
+          end: today
+        })
         if (
-          !oneTweetSent &&
-          milestoneReached &&
-          milestoneReached !== value.lastViewsMilestone
+            !oneTweetSent &&
+            milestoneReached &&
+            milestoneReached !== value.lastViewsMilestone &&
+            !tweetedRecently
         ) {
           console.info(formatLog("Sending Tweet!"));
           const tweetSent = await sendTweet(

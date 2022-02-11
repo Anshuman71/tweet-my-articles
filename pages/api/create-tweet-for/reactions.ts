@@ -8,8 +8,9 @@ import {
   sendTweet,
 } from "../../../utils";
 import { Document } from "mongodb";
-import { Article, COLLECTION_NAMES, DevArticle, SOURCE } from "../../../types";
+import { Article, COLLECTION_NAMES, SOURCE } from "../../../types";
 import { REACTIONS_MILESTONE_SEQUENCE } from "../../../constants";
+import {isWithinInterval, subDays} from 'date-fns'
 
 export default async function reactions(
   request: NextApiRequest,
@@ -44,10 +45,16 @@ export default async function reactions(
         console.info(
           formatLog("Existing Milestone: " + value.lastReactionsMilestone)
         );
+        const today = new Date()
+        const tweetedRecently = isWithinInterval(new Date(value.lastTweetedAt), {
+          start: subDays(today, 3),
+          end: today
+        })
         if (
-          !oneTweetSent &&
-          milestoneReached &&
-          milestoneReached !== value.lastReactionsMilestone
+            !oneTweetSent &&
+            milestoneReached &&
+            milestoneReached !== value.lastReactionsMilestone &&
+            !tweetedRecently
         ) {
           console.info(formatLog("Sending Tweet!"));
           const tweetSent = await sendTweet(
